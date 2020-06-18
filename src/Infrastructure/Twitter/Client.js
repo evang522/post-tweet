@@ -35,7 +35,7 @@ class Client {
         return new Promise(async (resolve, reject) => {
             const tweetData = {
                 'status': tweetText,
-                ...(lastTweetId && {in_reply_to_status_id: lastTweetId.toString()})
+                ...(lastTweetId && {in_reply_to_status_id: lastTweetId})
             };
 
             console.log(tweetData);
@@ -61,7 +61,7 @@ class Client {
 
     getAdjustedTweetList(text) {
 
-        if (text.length <= 140) {
+        if (text.length <= 280) {
             return [text];
         }
 
@@ -70,13 +70,13 @@ class Client {
     }
 
     breakLongTweetIntoSmallerSeparateTweets(tweet) {
-        let splitBySpaced = tweet.split(' ');
+        let splitBySpaced = tweet.replace(/(\r\n|\n|\r)/gm, ' ').split(' ');
         const tweetList = [];
         let currentTweet = '';
 
         for (let text of splitBySpaced) {
-            if (currentTweet.length < 140 && (currentTweet.length + (text.length + 1)) <= 140) {
-                currentTweet += text + ' ';
+            if (currentTweet.length < 280 && (currentTweet.length + (text.length + 1)) <= 280) {
+                currentTweet += (' ' + text);
             } else {
                 tweetList.push(currentTweet);
                 currentTweet = text;
