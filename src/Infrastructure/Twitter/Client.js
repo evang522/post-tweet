@@ -22,12 +22,17 @@ class Client {
         this.userSecret = userSecret;
     }
 
-    async postTweet(text) {
+    async postTweet(text, dryRun) {
         let lastTweetId = null;
         for (let tweet of this.getAdjustedTweetList(text)) {
-            const tweetId = await this.sendTweetChunk(tweet, lastTweetId);
-            console.log('TWEET ID', tweetId);
-            lastTweetId = tweetId || null;
+            if (!dryRun) {
+                const tweetId = await this.sendTweetChunk(tweet, lastTweetId);
+                lastTweetId = tweetId || null;
+            } else {
+                console.log(tweet);
+                console.log('---');
+            }
+
         }
     }
 
@@ -35,7 +40,7 @@ class Client {
         return new Promise(async (resolve, reject) => {
             const tweetData = {
                 'status': tweetText,
-                ...(lastTweetId && {in_reply_to_status_id: lastTweetId})
+                ...(lastTweetId && { in_reply_to_status_id: lastTweetId })
             };
 
             console.log(tweetData);
@@ -70,7 +75,7 @@ class Client {
     }
 
     breakLongTweetIntoSmallerSeparateTweets(tweet) {
-        let splitBySpaced = tweet.replace(/(\r\n|\n|\r)/gm, ' ').split(' ');
+        let splitBySpaced = tweet.replace(/(\r\n|\n|\r)/gm, '').split(' ');
         const tweetList = [];
         let currentTweet = '';
 

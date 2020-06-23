@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "tweet": "sh -ac '. ./.env; node ./index.js'"
+    "tweet": "sh -ac '. ./.env; node ./index.js'",
+    "dry-tweet": "sh -ac '. ./.env; node ./index.js -dr'"
   },
   "author": "",
   "license": "ISC",
